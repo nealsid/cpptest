@@ -44,6 +44,7 @@ int main() {
   for (const auto a : v |
 	 views::filter(is_odd) |
 	 views::transform(new_obj_double_foo)) {
+    cout << &a << " ";
     println("{}", a.foo);
   }
 }
