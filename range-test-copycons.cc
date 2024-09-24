@@ -3,6 +3,7 @@
 #include <ranges>
 #include <print>
 #include <vector>
+#include <format>
 
 using namespace std;
 
@@ -44,8 +45,9 @@ int main() {
   for (const auto a : v |
 	 views::filter(is_odd) |
 	 views::transform(new_obj_double_foo)) {
-    cout << &a << " ";
-    println("{}", a.foo);
+    //    cout << &a << " ";
+    println("{} {}", static_cast<const void*>(&a), a.foo);
+    //    println("{}", a.foo);
   }
 }
 
