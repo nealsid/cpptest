@@ -34,6 +34,10 @@ int main() {
     v.emplace_back(i);
   }
 
+  for (int i = 0; i < 10; ++i) {
+    println("address of {}: {}", i, static_cast<void*>(&v[i]));
+  }
+
   auto is_odd = [&](const auto& obj) {
     return obj.foo % 2 == 1;
   };
@@ -43,11 +47,11 @@ int main() {
   };
 
   for (const auto a : v |
-	 views::filter(is_odd) |
-	 views::transform(new_obj_double_foo)) {
-    //    cout << &a << " ";
+	 views::filter(is_odd)) {
+    //	 views::transform(new_obj_double_foo)) {
+
     println("{} {}", static_cast<const void*>(&a), a.foo);
-    //    println("{}", a.foo);
+
   }
 }
 
