@@ -3,19 +3,27 @@
 #include <ranges>
 #include <print>
 #include <vector>
-#include <format>
+#include <execution>
 
 using namespace std;
 
+// #define STRING2(x) #x
+// #define STRING(x) STRING2(x)
+// #pragma message "var = " STRING(_LIBCPP_STD_VER)
 class MyObj {
 public:
   MyObj(int a) :
     foo(a) {
-    std::println("Construct {}", foo);
+    //    std::println("Construct {}", foo);
+  }
+
+  MyObj& operator=(const MyObj& other){
+    this->foo = other.foo;
+    return *this;
   }
 
   MyObj(const MyObj& myObj) {
-    std::println("Copy construct {}", myObj.foo);
+    //    std::println("Copy construct {}", myObj.foo);
     this->foo = myObj.foo;
   }
 
@@ -28,14 +36,11 @@ public:
 };
 
 int main() {
+  int numElements = 500000000;
   vector<MyObj> v;
-  v.reserve(10);
-  for (int i = 0 ; i < 10; ++i) {
+  v.reserve(numElements);
+  for (int i = 0 ; i < numElements; ++i) {
     v.emplace_back(i);
-  }
-
-  for (int i = 0; i < 10; ++i) {
-    println("address of {}: {}", i, static_cast<void*>(&v[i]));
   }
 
   auto is_odd = [&](const auto& obj) {
@@ -46,13 +51,19 @@ int main() {
     return MyObj{obj.foo*2};
   };
 
-  for (const auto a : v |
-	 views::filter(is_odd)) {
-    //	 views::transform(new_obj_double_foo)) {
-
-    println("{} {}", static_cast<const void*>(&a), a.foo);
-
-  }
+  vector<MyObj> out;
+  out.reserve(numElements);
+  using std::execution::par;
+  std::transform(execution::par,
+		 v.begin(),
+		 v.end(),
+		 out.begin(),
+		 new_obj_double_foo);
+  // for (const auto a : v |
+  // 	 views::filter(is_odd) |
+  // 	 views::transform(new_obj_double_foo)) {
+  //   println("{}", a.foo);
+  // }
 }
 
   
